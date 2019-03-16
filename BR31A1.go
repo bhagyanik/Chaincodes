@@ -15,14 +15,14 @@ type Chaincode1 struct {
 
 //Define DWPB structure 
 type DWPB struct {
-	UniqueID     			string    `json:"UniqueID"`
+	UniqueID     		string    `json:"UniqueID"`
 	Latest_approved_value	float64   `json:"Latest_approved_value"`
 	Latest_utilised_value	float64   `json:"Latest_utilised_value"`
 	Latest_remaining_value	float64   `json:"Latest_remaining_value"`
-	ModifiedDate 			int64	  `json:"Modified_Date"` // timestamp
-	Version					string    `json:"Version"`
-	Expired      			bool	  `json:"Expired"`
-	Budget_sub_status		string    `json:"Budget_sub_status"`
+	ModifiedDate 		int64	  `json:"Modified_Date"` // timestamp
+	Version			string    `json:"Version"`
+	Expired    		bool	  `json:"Expired"`
+	Budget_sub_status	string    `json:"Budget_sub_status"`
 }
 
 func (s *Chaincode1) Init (APIstub shim.ChaincodeStubInterface, args[] string) pb.Response {
@@ -42,13 +42,13 @@ func (s *Chaincode1) Invoke(APIstub shim.ChaincodeStubInterface) pb.Response {
 }    
 
 
-func (s *Chaincode1) CreateDWPB (APIstub shim.ChaincodeStubInterface) pb.Response {
+func (s *Chaincode1) createDWPB (APIstub shim.ChaincodeStubInterface) pb.Response {
     if len(args) != 8 {
 		return shim.Error("Incorrect number of arguments. Expecting 8")
 	}
 
 // populate DWPB
-	DWPB := DWPB {}
+	Dwpb := DWPB {
 	UniqueID  = args[0]
 	Latest_approved_value = args[1]
 	Latest_utilised_value = args[2]
@@ -57,14 +57,14 @@ func (s *Chaincode1) CreateDWPB (APIstub shim.ChaincodeStubInterface) pb.Respons
 	Version = args[5]
 	Expired  = args[6]
 	Budget_sub_status = args[7]
-
+	}	
 //store state in ledger
-	DWPBAsBytes,_ := json.Marshal(DWPB)	
+	DWPBAsBytes,_ := json.Marshal(Dwpb)	
 	err := APIstub.PutState(UniqueID,DWPBAsBytes)
 	if err != nil {
 	return shim.Error(fmt.Sprintf("Failed to create DWPB"))
 	}
-
+}
 //function to update the existing DWPB
 
 //func (s *Chaincode1) UpdateDWPB (APIstub shim.ChaincodeStubInterface) pb.Response {
@@ -83,3 +83,5 @@ func (s *Chaincode1) queryDWPB (APIstub shim.ChaincodeStubInterface, args []stri
   }
   return shim.Success(DWPBAsBytes)
 }
+
+
